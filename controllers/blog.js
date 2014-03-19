@@ -4,7 +4,9 @@
  */
 
 var parse = require('co-body')
-    , db = require('../model/db').db;
+    , mongo = require('../model/db')
+    , db = mongo.db
+    , toObjectID = mongo.toObjectID;
 
 db.bind('blogs');
 
@@ -53,8 +55,9 @@ exports.blogList = function *(){
 }
 
 exports.read = function *() {
-    console.log('read.....')
-    console.log(db.getObjectId(this.params.id));
-    var blog = yield findOne();
-    console.log(blog);
+    var blog = yield findOne(new toObjectID(this.params.id));
+    yield  this.render('blogRead', {
+        blog: blog
+    })
+
 }
