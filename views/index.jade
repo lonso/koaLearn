@@ -1,0 +1,28 @@
+//
+   Created by lonso on 14-3-19.
+   liusc@polyvi.com
+
+doctype html
+html(ng-app='koaLearn')
+    head
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        title koaLearn
+        meta(name='description', content='')
+        meta(name='viewport', content='width=device-width')
+        link(href='stylesheets/bootstrap.css', rel='stylesheet', media='screen')
+        script(src='javascripts/angular.js')
+    body
+        nav.navbar.navbar-inverse(role='navigation')
+            p.navbar-text koaLearn
+        div(ng-view)
+        script(src='javascripts/app.js')
+        script(src='javascripts/angular-resource.min.js')
+        script(src='javascripts/angular-route.min.js')
+        script(src='javascripts/angular-sanitize.min.js')
+        script(src='javascripts/controllers/blogService.js')
+        script(src='javascripts/controllers/blog.js')
+
+
+
+

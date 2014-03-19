@@ -1,0 +1,9 @@
+//
+   Created by lonso on 14-3-19.
+   liusc@polyvi.com
+
+div(ng-controller='blogController', ng-init='init()')
+    input(class='btn btn-success', type='button', value='新增', onclick='location.href="#/blog/new"')
+    ul
+        li(ng-repeat='blog in blogList')
+            a(ng-href='#/blog/{{blog._id}}') {{blog.title}}

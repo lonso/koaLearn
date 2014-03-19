@@ -1,0 +1,21 @@
+
+<!--
+Created by lonso on 14-3-19.
+liusc@polyvi.com
+
+
+
+-->
+<div ng-controller="blogController">
+  <form role="form" class="col-md-6">
+    <div class="form-group">
+      <label for="title">title</label>
+      <input type="text" placeholder="input title" ng-model="blog.title" id="title" class="form-control"/>
+    </div>
+    <div class="form-group">
+      <label for="content">content</label>
+      <textarea ng-model="blog.content" placeholder="input content" id="content" class="form-control"></textarea>
+    </div>
+    <button ng-click="submit()" class="btn btn-primary">添加</button>
+  </form>
+</div>
