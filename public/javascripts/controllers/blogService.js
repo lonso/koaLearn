@@ -24,6 +24,7 @@ app.factory('blogService', [ '$http', '$q', function ($http, $q) {
         save: function(data) {
             var deferred = $q.defer();
             $http.post('/blog', data).success(function(item, code){
+							console.log(item, code)
                 if (code === 200) {
                     deferred.resolve();
                 } else {

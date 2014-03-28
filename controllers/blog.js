@@ -4,8 +4,12 @@
  */
 
 var parse = require('co-body');
-var db = require('../model/db').db;
+var mongo = require('../model/db');
+var db = mongo.db;
+var toObjectID = mongo.toObjectID;
 var thunkify = require('thunkify');
+var co = require('co');
+
 
 db.bind('blogs');
 
@@ -22,30 +26,37 @@ exports.list = function *() {
 };
 
 function saveFun(data, cb) {
-		db.blogs.insert(data, {safe: true}, function (err, o) {
-			cb(err, o);
-		})
+	db.blogs.insert(data, {safe: true}, function (err, o) {
+		cb(new Error('miss arg'), o);
+	})
 }
-
-var save = thunkify(saveFun);
-function items() {
-	return function (fn) {
+function getItems(cb) {
 		db.blogs.find().toArray(function (err, results) {
-			fn(err, results);
+			cb(err, results);
 		})
-	}
 }
 
-function findOne(id) {
-	return function (fn) {
-		db.blogs.findOne({_id: id}, fn)
-	}
+
+function findOneFun(id, cb) {
+	db.blogs.findOne({_id: id}, function(err, o){
+		cb(err, o);
+	})
 }
+
+var items = thunkify(getItems);
+var findOne = thunkify(findOneFun);
+var save = thunkify(saveFun);
 
 
 exports.create = function *() {
-	var body = yield parse.json(this);
-	this.body = yield save(body);
+	try{
+		var body = yield parse.json(this);
+		this.body = yield save(body);
+	}catch(e) {
+		this.status = 500
+		return;
+	}
+
 };
 
 exports.blogList = function *() {
@@ -53,6 +64,9 @@ exports.blogList = function *() {
 };
 
 exports.read = function *() {
-	var blog = yield findOne();
-	console.log(blog);
+	var blog = yield findOne(new toObjectID(this.params.id));
+	yield  this.render('blogRead', {
+		blog: blog
+	});
+
 };

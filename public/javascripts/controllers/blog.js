@@ -21,8 +21,8 @@ app.config(['$routeProvider', function ($routeProvider) {
 }]);
 
 
-app.controller('blogController', ['$scope', 'blogService',
-    function ($scope, blogService) {
+app.controller('blogController', ['$scope', 'blogService', '$location',
+    function ($scope, blogService, $location) {
         $scope.blog = {};
         $scope.submit = function() {
             if (!$scope.blog.title || !$scope.blog.content) {
@@ -31,11 +31,13 @@ app.controller('blogController', ['$scope', 'blogService',
             } else {
                 blogService.save($scope.blog).then(function(){
                     alert('成功');
+                    $location.path('/');
                 }, function(){
                     alert('失败');
                 })
             }
         };
+
         $scope.init = function() {
             blogService.all().then(function(items){
                 $scope.blogList = items;
@@ -43,5 +45,4 @@ app.controller('blogController', ['$scope', 'blogService',
         }
 
     }]);
-
 
