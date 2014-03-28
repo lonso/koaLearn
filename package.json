@@ -1,17 +1,18 @@
 {
-    "name": "koaLearn",
-    "version": "0.0.1",
-    "private": true,
-    "scripts": {
-        "start": "node app.js"
-    },
-    "dependencies": {
-        "koa": "latest",
-        "koa-router": "latest",
-        "koa-views": "latest",
-        "mongoskin": "latest",
-        "then-jade": "latest",
-        "koa-static": "latest",
-        "co-body": "latest"
-    }
+	"name": "koaLearn",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node app.js"
+	},
+	"dependencies": {
+		"koa": "latest",
+		"koa-router": "latest",
+		"koa-views": "latest",
+		"mongoskin": "latest",
+		"then-jade": "latest",
+		"koa-static": "latest",
+		"co-body": "latest",
+		"thunkify": "latest"
+	}
 }

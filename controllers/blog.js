@@ -3,58 +3,56 @@
  * liusc@polyvi.com
  */
 
-var parse = require('co-body')
-    , db = require('../model/db').db;
+var parse = require('co-body');
+var db = require('../model/db').db;
+var thunkify = require('thunkify');
 
 db.bind('blogs');
 
 exports.index = function *() {
-    yield this.render('index');
+	yield this.render('index');
 };
 
 exports.new = function *() {
-    yield  this.render('blogNew');
+	yield  this.render('blogNew');
 };
 
 exports.list = function *() {
-    yield  this.render('blogList');
+	yield  this.render('blogList');
 };
 
-function save(data){
-    return function(fn) {
-        db.blogs.insert(data, {safe:true}, function(err, o) {
-            fn(err, o);
-        })
-    }
+function saveFun(data, cb) {
+		db.blogs.insert(data, {safe: true}, function (err, o) {
+			cb(err, o);
+		})
 }
 
+var save = thunkify(saveFun);
 function items() {
-    return function(fn) {
-        db.blogs.find().toArray(function(err, results){
-            fn(err, results);
-        })
-    }
+	return function (fn) {
+		db.blogs.find().toArray(function (err, results) {
+			fn(err, results);
+		})
+	}
 }
 
 function findOne(id) {
-   return function(fn) {
-       db.blogs.findOne({_id: id}, fn)
-   }
+	return function (fn) {
+		db.blogs.findOne({_id: id}, fn)
+	}
 }
 
 
 exports.create = function *() {
-    var body = yield parse.json(this);
-    this.body =  yield save(body);
-}
+	var body = yield parse.json(this);
+	this.body = yield save(body);
+};
 
-exports.blogList = function *(){
-    this.body = yield items();
-}
+exports.blogList = function *() {
+	this.body = yield items();
+};
 
 exports.read = function *() {
-    console.log('read.....')
-    console.log(db.getObjectId(this.params.id));
-    var blog = yield findOne();
-    console.log(blog);
-}
+	var blog = yield findOne();
+	console.log(blog);
+};
