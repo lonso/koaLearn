@@ -16,6 +16,12 @@ var path = require('path');
 var uploadFolder = path.resolve(__dirname, "..", 'upload/')+"/";
 var debug = require('debug')('controller:blog');
 
+path.exists(uploadFolder, function(exists){
+	if (!exists) {
+		fs.mkdir(uploadFolder)
+	}
+
+});
 
 
 exports.index = function *() {
