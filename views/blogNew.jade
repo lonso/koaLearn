@@ -5,12 +5,16 @@
 
 
 div(ng-controller='blogController')
-    form.col-md-6(role='form')
+    form.col-md-6(role='form', enctype="multipart/form-data")
         div.form-group
             label(for='title') title
             input(type='text', placeholder='input title', ng-model='blog.title').form-control#title
         div.form-group
             label(for='content') content
             textarea(ng-model='blog.content', placeholder='input content').form-control#content
+        div.form-group
+            label(for='image') image
+            input(type='file', ng-file-select='onFileSelect($files)').form-control#image
+
 
         button.btn.btn-primary(ng-click='submit()') 添加

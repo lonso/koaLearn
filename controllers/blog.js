@@ -3,17 +3,23 @@
  * liusc@polyvi.com
  */
 
+
+
+
+var db = require('../model/db');
 var parse = require('co-body');
-var mongo = require('../model/db');
-var db = mongo.db;
-var toObjectID = mongo.toObjectID;
 var thunkify = require('thunkify');
 var co = require('co');
+var bParse = require('co-busboy');
+var fs = require('fs');
+var path = require('path');
+var uploadFolder = path.resolve(__dirname, "..", 'upload/')+"/";
+var debug = require('debug')('controller:blog');
 
 
-db.bind('blogs');
 
 exports.index = function *() {
+	debug('index..............');
 	yield this.render('index');
 };
 
@@ -26,19 +32,19 @@ exports.list = function *() {
 };
 
 function saveFun(data, cb) {
-	db.blogs.insert(data, {safe: true}, function (err, o) {
-		cb(new Error('miss arg'), o);
+	db.blogModel.create(data, function(err, o){
+		cb(err, o);
 	})
 }
 function getItems(cb) {
-		db.blogs.find().toArray(function (err, results) {
-			cb(err, results);
-		})
+	db.blogModel.find({}, function(err, blogs){
+		cb(err, blogs)
+	});
 }
 
 
 function findOneFun(id, cb) {
-	db.blogs.findOne({_id: id}, function(err, o){
+	db.blogModel.findById(id, function(err, o){
 		cb(err, o);
 	})
 }
@@ -50,8 +56,20 @@ var save = thunkify(saveFun);
 
 exports.create = function *() {
 	try{
-		var body = yield parse.json(this);
-		this.body = yield save(body);
+		var parts = bParse(this);
+		var part;
+		var _obj  = {};
+		while (part = yield parts) {
+			if (part['fieldname']) {
+				var filePath = uploadFolder + Math.random() + part['filename'];
+				var stream = fs.createWriteStream(filePath);
+				part.pipe(stream);
+				_obj['filePath'] = filePath;
+			} else {
+				_obj[part[0]] = part[1];
+			}
+		}
+		this.body = yield save(_obj);
 	}catch(e) {
 		this.status = 500
 		return;
@@ -64,7 +82,7 @@ exports.blogList = function *() {
 };
 
 exports.read = function *() {
-	var blog = yield findOne(new toObjectID(this.params.id));
+	var blog = yield findOne(this.params.id);
 	yield  this.render('blogRead', {
 		blog: blog
 	});

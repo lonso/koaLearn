@@ -13,6 +13,9 @@
 		"then-jade": "latest",
 		"koa-static": "latest",
 		"co-body": "latest",
-		"thunkify": "latest"
+		"thunkify": "latest",
+		"debug": "latest",
+		"mongoose": "latest",
+		"canvas": "latest"
 	}
 }
